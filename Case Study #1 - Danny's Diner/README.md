@@ -43,6 +43,8 @@ ORDER BY sales.customer_id;
 - The LEFT JOIN clause is used to combine records from the sales and menu tables based on the product_id column.
 - The GROUP BY clause groups the results by customer_id, ensuring that each customer's total spending is aggregated.
 - The ORDER BY clause sorts the results by customer_id in ascending order.
+
+***
   
 **2. How many days has each customer visited the restaurant?**
 ````sql
@@ -68,6 +70,8 @@ ORDER BY customer_id;
 - The CONCAT function is used to combine the count of distinct order dates with the string 'days' to form the days_visited column.
 - The GROUP BY clause groups the results by customer_id to aggregate the count of distinct order dates for each customer.
 - The ORDER BY clause sorts the results by customer_id in ascending order.
+
+***
 
 **3. What was the first item from the menu purchased by each customer?**
 ````sql
@@ -104,6 +108,8 @@ WITH First_Item_Purchased(customer_id, product_order, product_name) AS(
 - The SELECT statement outside the CTE retrieves the customer_id and product_name where the product_order is equal to 1, indicating the first item purchased.
 - The GROUP BY clause ensures that each customer's first purchased item is distinct.
 
+***
+
 **4. What is the most purchased item on the menu and how many times was it purchased by all customers?**
 ````sql
 SELECT menu.product_name,
@@ -129,6 +135,8 @@ LIMIT 1;
 - The GROUP BY clause groups the results by product_name to aggregate the count of product_id occurrences for each menu item.
 - The ORDER BY clause sorts the results by the count of product_id occurrences in descending order, ensuring the most purchased item appears first.
 - The LIMIT 1 clause restricts the output to only the top row, showing the most purchased item.
+
+***
 
 **5. Which item was the most popular for each customer?**
 ````sql
@@ -167,6 +175,8 @@ WHERE ranking = 1;
 - The SELECT statement outside the CTE retrieves the customer_id, product_name, and no_of_times_purchased columns from the Item_popularity CTE.
 - The WHERE clause filters the results to only include rows where the ranking is equal to 1, indicating the most popular item(s) for each customer.
 
+***
+
 **6. Which item was purchased first by the customer after they became a member?**
 ````sql
 WITH item_purchased_ranked AS (
@@ -199,11 +209,19 @@ WHERE
 
 - Customer A first order after becoming a member was ramen
 - Customer B first order after becoming a member was sushi
+- Customer C is not yet a member
 
 #### Query Breakdown:
-- The CTE named item_purchased_ranked uses the ROW_NUMBER() window function to assign a rank to each purchase within each customer group based on the order date. The PARTITION BY clause ensures that the ranking is done separately for each customer.
-- The WHERE clause filters the results to include only purchases made after the customer became a member.
-- The SELECT statement outside the CTE retrieves the customer_id and product_name for the first item purchased by each customer after they became a member, identified by the purchase_rank equal to 1.
+- The query utilizes a Common Table Expression (CTE) named item_purchased_ranked to calculate the rank of each purchase made by customers after they became members.
+- The CTE joins the sales, members, and menu tables to retrieve customer_id, product_name, order_date, and join_date.
+- The ROW_NUMBER() window function is applied within the CTE to assign a unique rank to each purchase within each customer group, based on the order_date.
+- The PARTITION BY clause ensures that the ranking is done separately for each customer.
+- The WHERE clause filters the results to only include purchases made after the customer became a member, ensuring that only relevant purchases are considered for ranking.
+- The main query selects the customer_id and product_name from the item_purchased_ranked CTE where the purchase_rank is equal to 1, indicating the first purchase made by each customer after becoming a member.
+
+***
+
+
 
 
 
