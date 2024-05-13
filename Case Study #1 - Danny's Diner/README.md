@@ -221,6 +221,46 @@ WHERE
 
 ***
 
+**7. Which item was purchased just before the customer became a member?**
+````sql
+WITH item_purchased_ranked AS (
+    SELECT 
+        members.customer_id,
+        menu.product_name,
+        sales.order_date,
+        members.join_date,
+        ROW_NUMBER() OVER (PARTITION BY members.customer_id ORDER BY sales.order_date DESC) AS purchase_rank
+    FROM 
+        dannys_diner.sales
+    RIGHT JOIN 
+        dannys_diner.members ON sales.customer_id = members.customer_id
+    LEFT JOIN 
+        dannys_diner.menu ON sales.product_id = menu.product_id
+    WHERE 
+        sales.order_date < members.join_date
+)
+SELECT 
+    customer_id,
+    product_name
+FROM 
+    item_purchased_ranked
+WHERE 
+    purchase_rank = 1;
+````
+| customer_id | product_name |
+| ----------- | ------------ |
+| A           | sushi        |
+| B           | sushi        |
+
+- Both Customer A and B have Sushi as their last order before becoming members
+
+#### Query Breakdown:
+- The CTE named item_purchased_before_join retrieves the purchases made by customers just before they became members.
+- The ROW_NUMBER() window function is used to assign a rank to each purchase within each customer group, ordered by the order_date in descending order (from the latest to the earliest).
+- The WHERE clause filters the results to include only purchases made before the join_date for each customer.
+- The main query selects the customer_id and product_name for the purchase with the highest rank (i.e., the purchase made just before becoming a member).
+
+****
 
 
 
