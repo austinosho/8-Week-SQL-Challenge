@@ -167,6 +167,47 @@ WHERE ranking = 1;
 - The SELECT statement outside the CTE retrieves the customer_id, product_name, and no_of_times_purchased columns from the Item_popularity CTE.
 - The WHERE clause filters the results to only include rows where the ranking is equal to 1, indicating the most popular item(s) for each customer.
 
+**6. Which item was purchased first by the customer after they became a member?**
+````sql
+WITH item_purchased_ranked AS (
+    SELECT 
+        members.customer_id,
+        menu.product_name,
+        sales.order_date,
+        members.join_date,
+        ROW_NUMBER() OVER (PARTITION BY members.customer_id ORDER BY sales.order_date) AS purchase_rank
+    FROM 
+        dannys_diner.sales
+    RIGHT JOIN 
+        dannys_diner.members ON sales.customer_id = members.customer_id
+    LEFT JOIN 
+        dannys_diner.menu ON sales.product_id = menu.product_id
+    WHERE 
+        sales.order_date > members.join_date)
+SELECT 
+    customer_id,
+    product_name
+FROM 
+    item_purchased_ranked
+WHERE 
+    purchase_rank = 1;
+````
+| customer_id | product_name |
+| ----------- | ------------ |
+| A           | ramen        |
+| B           | sushi        |
+
+- Customer A first order after becoming a member was ramen
+- Customer B first order after becoming a member was sushi
+
+#### Query Breakdown:
+- The CTE named item_purchased_ranked uses the ROW_NUMBER() window function to assign a rank to each purchase within each customer group based on the order date. The PARTITION BY clause ensures that the ranking is done separately for each customer.
+- The WHERE clause filters the results to include only purchases made after the customer became a member.
+- The SELECT statement outside the CTE retrieves the customer_id and product_name for the first item purchased by each customer after they became a member, identified by the purchase_rank equal to 1.
+
+
+
+
 
 
 
