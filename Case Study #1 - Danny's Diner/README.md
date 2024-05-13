@@ -130,6 +130,47 @@ LIMIT 1;
 - The ORDER BY clause sorts the results by the count of product_id occurrences in descending order, ensuring the most purchased item appears first.
 - The LIMIT 1 clause restricts the output to only the top row, showing the most purchased item.
 
+**5. Which item was the most popular for each customer?**
+````sql
+WITH Item_popularity AS(
+SELECT 
+    sales.customer_id, 
+    menu.product_name,
+    COUNT(sales.product_id) AS no_of_times_purchased,
+    RANK() OVER (PARTITION BY sales.customer_id ORDER BY COUNT(sales.product_id) DESC) AS ranking
+FROM 
+    dannys_diner.sales
+JOIN 
+    dannys_diner.menu ON menu.product_id = sales.product_id
+GROUP BY 
+    sales.customer_id, menu.product_name)
+SELECT customer_id,
+       product_name,
+       no_of_times_purchased
+FROM Item_popularity
+WHERE ranking = 1;
+````
+| customer_id | product_name | no_of_times_purchased |
+| ----------- | ------------ | --------------------- |
+| A           | ramen        | 3                     |
+| B           | ramen        | 2                     |
+| B           | curry        | 2                     |
+| B           | sushi        | 2                     |
+| C           | ramen        | 3                     |
+
+- Customer A can't get enough of ramen!.
+- Customer B is the ultimate foodie! Customer B enjoys a bit of everything - ramen, curry, and sushi are all on the menu.
+- Customer C is a ramen lover! Customer C's go-to choice at Danny's Diner is always a comforting bowl of ramen.
+
+#### Query Breakdown:
+- The CTE (Common Table Expression) named Item_popularity calculates the count of sales.product_id occurrences for each customer and product combination, while also assigning a rank to each product within each customer group based on the count of occurrences using the RANK() window function.
+- The SELECT statement outside the CTE retrieves the customer_id, product_name, and no_of_times_purchased columns from the Item_popularity CTE.
+- The WHERE clause filters the results to only include rows where the ranking is equal to 1, indicating the most popular item(s) for each customer.
+
+
+
+
+
 
 
 
