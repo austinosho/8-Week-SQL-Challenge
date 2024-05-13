@@ -120,8 +120,7 @@ LIMIT 1;
 | ramen        | 8 times               |
 
 - ramen is the most purchased product and was purchased 8 times.
-
-#### Query Breakdown:
+  
 #### Query Breakdown:
 - The SQL query selects the product_name from the menu table and concatenates the count of sales.product_id occurrences with the string 'times' to represent the number of times each item was purchased.
 - The JOIN clause combines data from the menu and sales tables based on the matching product_id.
