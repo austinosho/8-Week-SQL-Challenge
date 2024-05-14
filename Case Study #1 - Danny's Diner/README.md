@@ -356,7 +356,7 @@ ORDER BY sales.customer_id;
 | A           | 1020   |
 | B           | 320    |
 
-- From Day 1 to Day 7, their purchases earned 20 points per $1 spent, including sushi. After Day 7 until the end of January, their purchases continued to earn 10 points per $1 spent, with sushi still earning double points at 20 points per $1 spent.
+- For both Customer A and B, from Join date (Day 1) to 6 days after (Day 7), their purchases earned 20 points per $1 spent, including sushi. After Day 7 until the end of January, their purchases continued to earn 10 points per $1 spent, with sushi still earning double points at 20 points per $1 spent.
 
 #### Query Breakdown:
 - The query calculates points earned by each customer based on their purchases within the specified timeframes.
