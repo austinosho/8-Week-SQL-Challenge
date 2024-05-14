@@ -262,6 +262,70 @@ WHERE
 
 ****
 
+**8. What is the total items and amount spent for each member before they became a member?**
+````sql
+SELECT
+    sales.customer_id,
+    COUNT(sales.product_id) AS total_items,
+    CONCAT('$', SUM(MENU.PRICE)) as total_amount
+FROM dannys_diner.sales
+RIGHT JOIN dannys_diner.members
+ON sales.customer_id = members.customer_id
+AND sales.order_date < members.join_date
+LEFT JOIN dannys_diner.menu
+ON sales.product_id = menu.product_id
+GROUP BY sales.customer_id
+ORDER BY sales.customer_id;
+````
+| customer_id | total_items | total_amount |
+| ----------- | ----------- | ------------ |
+| A           | 2           | $25          |
+| B           | 3           | $40          |
+
+- Customer A spent $25 on two items before becoming a member
+- Customer B spent $40 on three items before becoming a member
+
+#### Query Breakdown:
+- The SQL query retrieves the total number of items and the total amount spent by each member before they became a member.
+- RIGHT JOIN is used to combine data from the sales and members tables based on the customer_id, ensuring that all members are included in the result set.
+- The JOIN condition also includes a filter to only consider purchases made before the member's join_date.
+- Another LEFT JOIN is used to bring in information about the menu items purchased, linking the product_id between the sales and menu tables.
+- The COUNT(sales.product_id) function calculates the total number of items purchased by each member before they became a member.
+- The SUM(menu.price) function calculates the total amount spent by each member before they became a member.
+- The CONCAT('$', ...) function formats the total amount spent as a currency, adding a dollar sign ('$') to the result.
+- The GROUP BY clause groups the results by customer_id to aggregate the total number of items and total amount spent for each member.
+- Finally, the results are ordered by customer_id in ascending order to present the information clearly.
+
+****
+
+**9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
+````sql
+SELECT 
+	  sales.customer_id,
+      SUM(CASE 
+             WHEN menu.product_name != 'sushi' THEN menu.price * 10
+             WHEN menu.product_name = 'sushi' THEN menu.price * 10 * 2
+          END) AS points_earned
+FROM dannys_diner.sales
+JOIN dannys_diner.menu
+ON sales.product_id = menu.product_id
+GROUP BY sales.customer_id
+ORDER BY sales.customer_id;
+````
+| customer_id | points_earned |
+| ----------- | ------------- |
+| A           | 860           |
+| B           | 940           |
+| C           | 360           |
+
+- Customer A earned 860 points
+- Customer B earned 940 points
+- Customer C earned 360 points
+
+#### Query Breakdown:
+- The CASE statement calculates the points earned for each product. For sushi, it multiplies the price by 10 and then by 2 (to apply the 2x points multiplier). For other products, it simply multiplies the price by 10.
+- The SUM function then calculates the total points earned for each customer by summing up the points earned for each product.
+- The GROUP BY clause groups the results by customer_id to calculate the total points earned for each customer.
 
 
 
