@@ -301,7 +301,7 @@ ORDER BY sales.customer_id;
 **9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
 ````sql
 SELECT 
-	  sales.customer_id,
+      sales.customer_id,
       SUM(CASE 
              WHEN menu.product_name != 'sushi' THEN menu.price * 10
              WHEN menu.product_name = 'sushi' THEN menu.price * 10 * 2
@@ -326,6 +326,50 @@ ORDER BY sales.customer_id;
 - The CASE statement calculates the points earned for each product. For sushi, it multiplies the price by 10 and then by 2 (to apply the 2x points multiplier). For other products, it simply multiplies the price by 10.
 - The SUM function then calculates the total points earned for each customer by summing up the points earned for each product.
 - The GROUP BY clause groups the results by customer_id to calculate the total points earned for each customer.
+
+****
+
+**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
+````sql
+SELECT 
+    sales.customer_id, 
+    SUM(
+        CASE
+            WHEN menu.product_name = 'sushi' THEN menu.price * 10 * 2
+            WHEN sales.order_date <= join_date + INTERVAL '6 days' THEN menu.price * 10 * 2
+            ELSE menu.price * 10
+        END) AS points
+FROM 
+    dannys_diner.sales
+JOIN 
+    dannys_diner.members ON sales.customer_id = members.customer_id
+JOIN 
+    dannys_diner.menu ON sales.product_id = menu.product_id
+WHERE 
+    sales.order_date <= DATE_TRUNC('month', '2021-01-31'::DATE) + INTERVAL '1   month' - INTERVAL '1 day' AND
+    sales.order_date >= members.join_date
+GROUP BY sales.customer_id
+ORDER BY sales.customer_id;
+````
+| customer_id | points |
+| ----------- | ------ |
+| A           | 1020   |
+| B           | 320    |
+
+- From Day 1 to Day 7, their purchases earned 20 points per $1 spent, including sushi. After Day 7 until the end of January, their purchases continued to earn 10 points per $1 spent, with sushi still earning double points at 20 points per $1 spent.
+
+#### Query Breakdown:
+- The query calculates points earned by each customer based on their purchases within the specified timeframes.
+- The nested CASE statements handles different earning rates for different time periods and types of items purchased (sushi vs. other items).
+- The sales.order_date is compared against the join date (members.join_date) and the end of the first week (members.join_date + INTERVAL '7 days') to determine which earning rate to apply.
+- The SUM function aggregates the points earned for each customer.
+- Finally, the results are grouped by customer_id to get the total points for each customer.
+
+****
+
+
+
+
 
 
 
