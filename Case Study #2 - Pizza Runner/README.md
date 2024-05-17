@@ -15,7 +15,10 @@ Being no stranger to data, Danny set up a robust database to track Pizza Runner'
 ![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/002f8981-8a0a-4de0-94a8-67a5eb9a1970)
 
 ## 🧑‍💻Tools 
-PostgreSQL on [DB Fiddle](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138)
+PostgreSQL
+
+## Data Cleaning and Transformation
+Before starting to write the SQL queries, it was necessary to investigate the data, as some actions needed to be taken regarding null values and data types in the customer_orders and runner_orders tables.
 
 
 ## Case Study Questions and Solution
