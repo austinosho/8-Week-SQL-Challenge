@@ -20,6 +20,49 @@ PostgreSQL
 ## Data Cleaning and Transformation
 Before starting to write the SQL queries, it was necessary to investigate the data, as some actions needed to be taken regarding null values and data types in the customer_orders and runner_orders tables.
 
+**Table: customer_orders**
+````sql
+SELECT * FROM pizza_runner.customer_orders;;
+````
+
+Viewing the `customer_orders` table below, we can see that there are null and blank ' ' values in both the `exclusions` and `extras` columns 
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/57a93b9e-13bd-40d4-bcbe-8e62b9e43493)
+
+To clean the table:
+  1. We will create a temporary table with all the columns.
+  2. Remove null values in `exlusions` and `extras` columns and replace with blank space ' '.
+
+````sql
+CREATE TEMP TABLE customer_order_temp AS
+SELECT 
+    order_id,
+    customer_id,
+    pizza_id,
+    CASE 
+        WHEN exclusions = 'null' OR exclusions IS NULL THEN ' '
+        ELSE exclusions
+    END AS exclusions,
+    CASE 
+        WHEN extras = 'null' OR extras IS NULL THEN ' '
+        ELSE extras
+    END AS extras,
+    order_time
+FROM 
+    pizza_runner.customer_orders;
+````
+
+View the `customer_order_temp` table
+````sql
+SELECT * FROM customer_order_temp
+````
+This is how the cleaned data looks and this table will be used to run all our queries
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/ea3b22fb-09aa-4a8a-bf38-84ee36bd5c53)
+
+
+
+
 
 ## Case Study Questions and Solution
 
