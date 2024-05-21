@@ -27,6 +27,8 @@ ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
 ````
+
+**Answer:**
 | customer_id | total_amount_spent |
 | ----------- | ------------------ |
 | A           | $76                |
@@ -54,6 +56,8 @@ FROM dannys_diner.sales
 GROUP BY customer_id
 ORDER BY customer_id;
 ````
+
+**Answer:**
 | customer_id | days_visited |
 | ----------- | ------------ |
 | A           | 4 days       |
@@ -91,6 +95,8 @@ WITH First_Item_Purchased(customer_id, product_order, product_name) AS(
          product_name
  ;
 ````
+
+**Answer:**
 | customer_id | product_name |
 | ----------- | ------------ |
 | A           | curry        |
@@ -121,6 +127,8 @@ GROUP BY menu.product_name
 ORDER BY no_of_times_purchased desc
 LIMIT 1;
 ````
+
+**Answer:**
 | product_name | no_of_times_purchased |
 | ------------ | --------------------- |
 | ramen        | 8 times               |
@@ -158,6 +166,8 @@ SELECT customer_id,
 FROM Item_popularity
 WHERE ranking = 1;
 ````
+
+**Answer:**
 | customer_id | product_name | no_of_times_purchased |
 | ----------- | ------------ | --------------------- |
 | A           | ramen        | 3                     |
@@ -202,6 +212,8 @@ FROM
 WHERE 
     purchase_rank = 1;
 ````
+
+**Answer:**
 | customer_id | product_name |
 | ----------- | ------------ |
 | A           | ramen        |
@@ -247,6 +259,8 @@ FROM
 WHERE 
     purchase_rank = 1;
 ````
+
+**Answer:**
 | customer_id | product_name |
 | ----------- | ------------ |
 | A           | sushi        |
@@ -277,6 +291,8 @@ ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
 ````
+
+**Answer:**
 | customer_id | total_items | total_amount |
 | ----------- | ----------- | ------------ |
 | A           | 2           | $25          |
@@ -312,6 +328,8 @@ ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
 ````
+
+**Answer:**
 | customer_id | points_earned |
 | ----------- | ------------- |
 | A           | 860           |
@@ -351,6 +369,8 @@ WHERE
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
 ````
+
+**Answer:**
 | customer_id | points |
 | ----------- | ------ |
 | A           | 1020   |
