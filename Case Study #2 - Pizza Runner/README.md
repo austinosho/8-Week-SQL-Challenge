@@ -175,6 +175,61 @@ ORDER BY runner_id
 - Runner 1 delivered 4 successful orders.
 - Runner 2 delivered 3 successful orders.
 - Runner 3 delivered 1 successful orders.
-  
+
+****
+
+**4. How many of each type of pizza was delivered?**
+````sql
+SELECT 
+	c.pizza_name,
+	COUNT(a.pizza_id) as "number delivered"
+FROM pizza_runner.customer_order_cleaned as a
+	JOIN pizza_runner.runner_orders_cleaned as b
+		ON a.order_id = b.order_id
+	LEFT JOIN pizza_runner.pizza_names as c
+		ON a.pizza_id = c.pizza_id
+	WHERE b.duration is NOT NULL
+	AND b.distance!= 0
+GROUP BY  c.pizza_name
+````
+
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/ad470b8d-7d85-4936-8417-c4959994012d)
+
+- 9 Meatlovers pizzas were delivered in total
+- 3 Vegetarian pizzas were delivered in total
+
+****
+
+**5. How many Vegetarian and Meatlovers were ordered by each customer?**
+````sql
+SELECT 
+	a.customer_id,
+	b.pizza_name,
+	COUNT(a.pizza_id) as "number of pizzas ordered"
+FROM pizza_runner.customer_order_cleaned as a
+	JOIN pizza_runner.pizza_names as b
+		ON a.pizza_id = b.pizza_id
+GROUP BY a.customer_id, b.pizza_name
+ORDER BY a.customer_id
+````
+
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/fc3f3f80-31d1-490b-94ca-0979334723ae)
+
+- Customer 101 ordered 2 Meatlovers pizzas and 1 Vegetarian pizza.
+- Customer 102 ordered 2 Meatlovers pizzas and 1 Vegetarian pizza.
+- Customer 103 ordered 3 Meatlovers pizzas and 1 Vegetarian pizza.
+- Customer 104 ordered 3 Meatlovers pizzaS.
+- Customer 105 ordered 1 Vegetarian pizza.
+
+****
+
+**6. What was the maximum number of pizzas delivered in a single order?**
+
+
+
 
 
