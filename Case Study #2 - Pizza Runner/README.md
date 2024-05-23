@@ -5,7 +5,12 @@
 - [Introduction](#introduction)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Tools](#tools)
+- [Data Cleaning and Transformation](#data-cleaning-and-transformation)
 - [Case Study Questions and Solution](#case-study-questions-and-solution)
+  - [A. Pizza Metrics](#a-pizza-metrics)
+  - [B. Runner and Customer Experience](#b-runner-and-customer-experience)
+  - [C. Ingredient Optimisation](#c-ingredient-optimisation)
+  - [D. Pricing and Ratings](#d-pricing-and-ratings)
 
 ## Introduction
 Danny, a pizza lover with a great desire for innovation, launched Pizza Runner - a blend of retro vibes and modern convenience. Seeing the massive daily pizza consumption worldwide, he sensed an opportunity to shake up the food delivery scene. But Danny didn't stop at just serving pizza; he envisioned a fleet of delivery runners and a sleek mobile app to make ordering swift.
