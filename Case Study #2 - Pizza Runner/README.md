@@ -529,6 +529,23 @@ ORDER BY c.order_id;
 ****
 
 **7. What is the successful delivery percentage for each runner?**
+````SQL
+SELECT 
+    runner_id,
+    CONCAT(ROUND((SUM(CASE WHEN distance != 0 THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(*), 0)), '%') AS successful_delivery_percentage
+FROM pizza_runner.runner_orders_cleaned 
+GROUP BY runner_id
+ORDER BY runner_id;
+````
 
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/3a849be0-6852-42a9-a91a-a8cf67267385)
+
+- Runner 1 had a successful delivery percentage of 100%.
+- Runner 2 had a successful delivery percentage of 75%.
+- Runner 3 had a successful delivery percentage of 50%.
+
+****
 
 
