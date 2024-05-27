@@ -495,4 +495,40 @@ WHERE duration IS NOT NULL;
 
 - The difference between the longest and shortest delivery times for all orders is 30 minutes.
 
+****
+
+**6. What was the average speed for each runner for each delivery and do you notice any trend for these values?**
+````sql
+SELECT 
+	r.runner_id,
+	c.customer_id,
+	c.order_id,
+	COUNT(pizza_id) AS no_of_pizza,
+	r.distance,
+	(r.duration / 60) AS time_hr,
+	ROUND((r.distance / r.duration * 60)::NUMERIC, 2) AS avg_speed	
+FROM pizza_runner.runner_orders_cleaned AS r
+JOIN pizza_runner.customer_order_cleaned AS c
+	ON r.order_id = c.order_id
+WHERE r.duration IS NOT NULL
+	AND r.distance IS NOT NULL
+GROUP BY r.runner_id, c.customer_id, c.order_id, r.distance, r.duration
+ORDER BY c.order_id;
+````
+
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/ccf77ba9-37e7-49de-a3cb-79bc27f826c2)
+
+- Average speed (avg_speed) varies significantly, ranging from 35.10 to 93.60 km per hour.
+- Runner 2 recorded the highest average speed (93.60 km/hour) for order 8, which may indicate either exceptional efficiency.
+- Runner 1 handled the most deliveries (orders 1, 2, 3, and 10) with consistent average speeds between 37.50 and 60 km/hour.
+- Runner 3 had an average speed of 40km/h.
+- Orders 4 and 8 both had a distance of 23.4 km, but differing average speeds and times suggest varying conditions or efficiencies.
+
+****
+
+**7. What is the successful delivery percentage for each runner?**
+
+
 
