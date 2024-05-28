@@ -1157,4 +1157,34 @@ FROM (
 
 ## E. Bonus Questions
 
+**If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?**
+
+````sql
+INSERT INTO pizza_runner.pizza_names VALUES(3, 'Supreme');
+SELECT * FROM pizza_runner.pizza_names;
+````
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/39f08938-2328-44d1-9ac7-729500b55c62)
+
+````sql
+INSERT INTO pizza_runner.pizza_recipes
+VALUES(3, (SELECT STRING_AGG(CAST(topping_id AS TEXT), ', ') FROM pizza_runner.pizza_toppings));
+
+SELECT * FROM pizza_runner.pizza_recipes;
+````
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/beec8fde-0aa4-4340-b7c9-f022d669a0ee)
+
+````sql
+SELECT * 
+FROM pizza_runner.pizza_names AS pn
+INNER JOIN pizza_runner.pizza_recipes AS pr
+ON pn.pizza_id = pr.pizza_id;
+````
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/3af74df5-4490-49af-ae4b-441ef4317fb0)
+
+****
+
+
 
