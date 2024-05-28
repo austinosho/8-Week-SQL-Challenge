@@ -548,4 +548,114 @@ ORDER BY runner_id;
 
 ****
 
+## C. Ingredient Optimisation
 
+**1. What are the standard ingredients for each pizza?**
+
+````sql
+SELECT
+    t.topping_name AS standard_ingredient
+FROM
+    pizza_runner.pizza_recipes AS p
+JOIN
+    pizza_runner.pizza_toppings AS t ON t.topping_id = ANY (string_to_array(p.toppings, ',')::int[])
+JOIN
+    pizza_runner.pizza_recipes AS pr ON pr.pizza_id <> p.pizza_id
+JOIN
+    pizza_runner.pizza_toppings AS pt ON pt.topping_id = ANY (string_to_array(pr.toppings, ',')::int[])
+WHERE
+    p.pizza_id = 1 
+AND pr.pizza_id = 2 
+AND t.topping_id = pt.topping_id
+GROUP BY
+    t.topping_id, t.topping_name;
+````
+
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/311bf7ca-ca4a-44f3-8261-fa8b9f336c29)
+
+- Ingredients for Meatlovers pizza are: "Bacon , BBQ Sauce , Beef , Cheese , Chicken , Mushrooms , Pepperoni , Salami".
+- Ingredients for Vegeterian pizza are: "Cheese , Mushrooms , Onions , Peppers , Tomatoes , Tomato Sauce".
+
+****
+
+**2. What was the most commonly added extra?**
+
+````sql
+WITH extra AS (
+  SELECT 
+    UNNEST(STRING_TO_ARRAY(extras, ','))::INTEGER AS extra_id
+  FROM 
+    pizza_runner.customer_order_cleaned
+  WHERE
+    extras IS NOT NULL AND extras <> ''
+)
+
+SELECT 
+  e.extra_id,
+  pt.topping_name AS extra_name,
+  COUNT(e.extra_id) AS times_added
+FROM 
+  extra e
+JOIN 
+  pizza_runner.pizza_toppings pt
+ON 
+  e.extra_id = pt.topping_id
+GROUP BY 
+  e.extra_id, pt.topping_name
+ORDER BY 
+  times_added DESC
+LIMIT 1;
+````
+
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/8b8b469f-950f-475c-93f9-8d6e01964c6b)
+
+- The most commonly added extra was Bacon.
+
+****
+
+**3. What was the most common exclusion?**
+
+````sql
+WITH most_exclusion AS (
+  SELECT 
+    UNNEST(STRING_TO_ARRAY(exclusions, ','))::INTEGER AS exclusion_id
+  FROM 
+    pizza_runner.customer_order_cleaned
+  WHERE
+    exclusions IS NOT NULL AND exclusions <> ''
+)
+
+SELECT 
+  e.exclusion_id,
+  pt.topping_name AS exclusion_name,
+  COUNT(e.exclusion_id) AS times_added
+FROM 
+  most_exclusion e
+JOIN 
+  pizza_runner.pizza_toppings pt
+ON 
+  e.exclusion_id = pt.topping_id
+GROUP BY 
+  e.exclusion_id, pt.topping_name
+ORDER BY 
+  times_added DESC
+LIMIT 1;
+````
+
+**Answer:**
+
+![image](https://github.com/austinosho/8-Week-SQL-Challenge/assets/166131518/b211da0d-086a-4504-a35d-6bae2102ccaa)
+
+- The most common exclusion was Cheese.
+
+****
+
+**4. Generate an order item for each record in the customers_orders table in the format of one of the following:
+	Meat Lovers
+	Meat Lovers - Exclude Beef
+	Meat Lovers - Extra Bacon
+	Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers**
